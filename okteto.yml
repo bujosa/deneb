@@ -1,0 +1,7 @@
+name: influxdb
+image: okteto/dev:latest
+command: bash
+sync:
+- .:/usr/src/app
+forward:
+- 8086:8086
