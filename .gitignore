@@ -1,3 +1,5 @@
 #Configuration
 .*.env
 
+#Okteto config
+.stignore
