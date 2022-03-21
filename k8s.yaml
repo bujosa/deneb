@@ -58,15 +58,21 @@ spec:
       containers:
       - name: influxdb
         image: influxdb:1.8
+        resources:
+          limits:
+            memory: "1024Mi"
+            cpu: "1000m"
         env:
           - name: INFLUXDB_DB
             value: "k6"
-          - name: INFLUXDB_ADMIN_ENABLED
-            value: "true"
-          - name: INFLUXDB_ADMIN_USER
-            value: "admin"
-          - name: INFLUXDB_ADMIN_PASSWORD
-            value: "admin"
+          # - name: INFLUXDB_ADMIN_ENABLED
+          #   value: "true"
+          # - name: INFLUXDB_ADMIN_USER
+          #   value: "admin"
+          # - name: INFLUXDB_ADMIN_PASSWORD
+          #   value: "admin"
+          # - name: INFLUXD_HTTP_BIND_ADDRESS
+          #   value: ":8086"
         volumeMounts:
           - name: storage
             mountPath: /var/lib/influxdb
@@ -110,6 +116,10 @@ spec:
       containers:
       - name: grafana
         image: grafana/grafana:latest
+        resources:
+          limits:
+            memory: "1024Mi"
+            cpu: "1000m"
         env:
           - name: GF_AUTH_ANONYMOUS_ORG_ROLE
             value: "Admin"

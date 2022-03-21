@@ -24,6 +24,15 @@ services:
     volumes:
       - database:/var/lib/influxdb
 
+  k6:
+    image: grafana/k6:latest
+    ports:
+      - "6565:6565"
+    environment:
+      - K6_OUT=influxdb=http://influxdb:8086/k6
+    volumes:
+      - ./samples:/scripts
+   
 volumes:
   database:
   grafana:
