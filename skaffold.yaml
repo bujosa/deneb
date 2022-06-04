@@ -3,4 +3,6 @@ kind: Config
 deploy:
   kubectl:
     manifests:
-    - k8s.yaml
+    - k8s/grafana.yaml
+    - k8s/influxdb.yaml
+    - k8s/persistent.yaml

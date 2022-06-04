@@ -1,0 +1,54 @@
+# GRAFANA
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: infra-bujosa
+  annotations:
+    dev.okteto.com/auto-ingress: "true"
+spec:
+  type: ClusterIP
+  ports:
+  - name: "grafana"
+    port: 3000
+  selector:
+    app: grafana
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: infra-bujosa
+  name: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - name: grafana
+        image: grafana/grafana:8.4.6
+        resources:
+          limits:
+            memory: "1024Mi"
+            cpu: "1000m"
+        env:
+          - name: GF_AUTH_ANONYMOUS_ORG_ROLE
+            value: "Admin"
+          - name: GF_AUTH_ANONYMOUS_ENABLED
+            value: "false"
+          - name: GF_AUTH_BASIC_ENABLED
+            value: "true"
+        # volumeMounts:
+        #   - name: grafana
+        #     mountPath:  /var/lib/grafana
+      volumes:
+        - name: grafana
+          persistentVolumeClaim:
+            claimName: grafana

@@ -1,0 +1,58 @@
+# INFLUXDB
+apiVersion: v1
+kind: Service
+metadata:
+  name: influxdb
+  namespace: infra-bujosa
+  annotations:
+    dev.okteto.com/auto-ingress: "true"
+spec:
+  type: ClusterIP
+  ports:
+  - name: "influxdb"
+    port: 8086
+  selector:
+    app: influxdb
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: infra-bujosa
+  name: influxdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: influxdb
+  template:
+    metadata:
+      labels:
+        app: influxdb
+    spec:
+      containers:
+      - name: influxdb
+        image: influxdb:1.8
+        resources:
+          limits:
+            memory: "1024Mi"
+            cpu: "1000m"
+        env:
+          - name: INFLUXDB_DB
+            value: "k6"
+          # - name: INFLUXDB_ADMIN_ENABLED
+          #   value: "true"
+          # - name: INFLUXDB_ADMIN_USER
+          #   value: "admin"
+          # - name: INFLUXDB_ADMIN_PASSWORD
+          #   value: "admin"
+          # - name: INFLUXD_HTTP_BIND_ADDRESS
+          #   value: ":8086"
+        volumeMounts:
+          - name: storage
+            mountPath: /var/lib/influxdb
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: influxdb
